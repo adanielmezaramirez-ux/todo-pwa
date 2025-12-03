@@ -113,7 +113,6 @@ export default function TaskPage({ tasks, setTasks }: TaskProps) {
         if (op.op === "create") {
           console.log(`Creando tarea: ${op.data.title}`);
           
-          // CORRECCIÓN: Enviar solo los campos que el backend espera
           const { data } = await api.post("/api/tasks", {
             title: op.data.title,
             description: op.data.description,
@@ -142,14 +141,12 @@ export default function TaskPage({ tasks, setTasks }: TaskProps) {
           
           console.log(`Actualizando tarea: ${serverId}`);
           
-          // CORRECCIÓN: Enviar solo los campos que el backend espera
           await api.put(`/api/tasks/${serverId}`, {
             title: op.data.title,
             description: op.data.description,
             status: op.data.status,
           });
           
-          // 🔹 CORRECCIÓN: Convertir OutboxTaskData a Task
           const updatedTask = outboxDataToTask({ ...op.data, _id: serverId });
           await putTaskLocal(updatedTask);
           
@@ -224,9 +221,6 @@ export default function TaskPage({ tasks, setTasks }: TaskProps) {
     await updatePendingCount();
     console.log('Sincronización completada');
   }
-
-
-  // Agregar tarea - VERSIÓN CORREGIDA
 
   async function addTask(e: React.FormEvent) {
     e.preventDefault();
